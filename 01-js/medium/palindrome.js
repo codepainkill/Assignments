@@ -4,7 +4,33 @@
 */
 
 function isPalindrome(str) {
-  return true;
+  //str = str.replace(/\s/g, '');
+  str = str.replace(/[,\!\?\.\s]/g, '');
+  str = str.toLowerCase();
+  console.log(str)
+  let str1 = "";
+  for(let i=str.length;i>0;i--)
+  {
+  str1 = str1+str[i-1]
+  }
+  let len = 0;
+  for(let i=0;i<str.length;i++)
+  {
+    if(str[i]==str1[i])
+    {
+      len +=1
+    }
+  }
+  if(len==str.length)
+  {
+    return true;
+  }
+  else
+  {
+    return false; 
+  }
+  
 }
 
+console.log(isPalindrome("RaCeCaR"))
 module.exports = isPalindrome;
