@@ -16,6 +16,66 @@
   Once you've implemented the logic, test your code by running
 */
 
-class Calculator {}
+class Calculator {
+constructor()
+  {
+    this.Result = 0;
+  }
+  
+  add(x)
+  {
+    this.Result +=x
 
+  }
+  
+  subtract(x)
+  {
+    this.Result -= x;
+
+  }
+
+  multiply(x)
+  {
+
+      this.Result = this.Result *x;
+    
+  }
+
+  divide(x)
+  {
+     try
+    {
+      if (x !=0)
+      {
+        this.Result = this.Result /x;
+      }
+      if (typeof x !== 'number' || x === 0) {
+        throw new Error('Invalid input: not a non-zero number');
+      }
+  
+    
+    }
+    catch(Error)
+    {
+      console.log(Error)
+    }   
+
+  }
+  getResult()
+  {
+    return this.Result
+  }
+  clear()
+  {
+    this.Result = 0;
+  }
+}
+calc = new Calculator();
+calc.add(12);
+
+calc.divide(4);
+console.log(calc.getResult());
+
+console.log(calc.divide(0));
+/**console.log(calc.getResult())**/
 module.exports = Calculator;
