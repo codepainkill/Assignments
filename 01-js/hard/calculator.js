@@ -17,11 +17,11 @@
 */
 
 class Calculator {
-constructor()
-  {
-    this.Result = 0;
-  }
-  
+  constructor()
+    {
+      this.Result = 0;
+    }
+    
   add(x)
   {
     this.Result +=x
@@ -41,25 +41,15 @@ constructor()
     
   }
 
-  divide(x)
+ divide(x)
   {
-     try
-    {
-      if (x !=0)
+      if (x==0)
       {
-        this.Result = this.Result /x;
+        throw error
       }
-      if (typeof x !== 'number' || x === 0) {
-        throw new Error('Invalid input: not a non-zero number');
-      }
-  
-    
-    }
-    catch(Error)
-    {
-      console.log(Error)
-    }   
-
+      this.Result = this.Result/x; // Attempting to divide by zero
+      console.log(this.Result); // This line won't be reached if an exception occurs
+      
   }
   getResult()
   {
@@ -69,13 +59,107 @@ constructor()
   {
     this.Result = 0;
   }
+
+  calculate(str){
+    if (!/^[0-9+\-*/(). \t]+$/.test(str)) {
+      throw new error;
+    }    
+    str = str.replace(/\s/g, '');
+    let parenthesesCount = 0;
+
+    for (const char of str) {
+      if (char === '(') {
+        parenthesesCount++;
+      } else if (char === ')') {
+        parenthesesCount--;
+        if (parenthesesCount < 0) {
+          throw error // Unbalanced parentheses
+        }
+      }
+    }
+    if(parenthesesCount!=0){
+      throw error
+    }
+    str = Array.from(str);
+    this.Result = this.calculate1(str, 0);
+
+  }
+  calculate1(str,index) {
+
+      
+      var stack=[];
+      var sign='+';
+      var number=0;
+    
+      for(let i=index;i<str.length;i++){
+        var current=str[i];
+        if(current>='0' && current<='9')
+        number=number*10+(current-'0');
+    
+        if(!(current>='0' && current<='9') || i===str.length-1){
+            if(current=='('){
+                number=this.calculate1(str,i+1);
+                let opening_parentheses=1;
+                let closing_parantheses=0;
+                //This loop is for counting the parantheses and shift the i pointer to the right position
+                for(let j=i+1;j<str.length;j++){
+
+
+
+
+                  if(str[j]===')')
+                    {
+                        closing_parantheses++;
+                        if(opening_parentheses===closing_parantheses){
+                        i=j;
+                        break;
+                        }
+    
+                    }
+                    else if(str[j]=='('){
+                        opening_parentheses++;
+                    }
+                }
+            }
+    
+            let pre=-1;
+            switch(sign){
+                case '+':
+                    stack.push(number);
+                    break;
+    
+                case '-':
+                    stack.push(number*-1);
+                    break;
+    
+                case '*':
+                    pre=stack.pop();
+                    stack.push(pre*number);
+                    break;
+    
+                case '/':
+                    pre=stack.pop();
+                    if(number==0)
+                    {
+                      throw error
+                    }
+                    stack.push(pre/number);
+                    break;
+            }
+            sign=current;
+            number=0;
+            if(current===')')
+            break;
+        }
+      }
+      
+      let ans = 0;
+      while (stack.length > 0) {
+        ans += stack.pop();
+      }
+
+      return ans;
+
+  }
 }
-calc = new Calculator();
-calc.add(12);
-
-calc.divide(4);
-console.log(calc.getResult());
-
-console.log(calc.divide(0));
-/**console.log(calc.getResult())**/
 module.exports = Calculator;
