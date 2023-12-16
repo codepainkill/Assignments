@@ -41,9 +41,72 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
-  
+ 
   const app = express();
+
+app.use(bodyParser.json()); 
   
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+let todos = []
+
+app.get('/todos',(req,res)=>{
+   res.json(todos)
+});
+
+
+app.get('/todos/:id',(req,res)=>{
+  const todo = todos.find(t=> t.id === parseInt(req.params.id) )
+  if(!todo)
+  {
+    res.status(404).send();
+  }
+  else
+  {
+    res.json(todo);
+  }
+});
+
+app.post('/todos',(req,res)=>{
+  const newTodo = {
+    id: Math.floor(Math.random() * 1000000), // unique random id
+    title: req.body.title,
+    description: req.body.description
+  };
+  todos.push(newTodo);
+  console.log("Todos Latest: "+todos)
+  res.status(201).json(newTodo)
+});
+
+app.put('/todos/:id',(req,res)=>{
+    const id = parseInt(req.params.id)
+    let index = todos.findIndex(t => t.id === id)
+    if(index === -1)
+    {
+      res.status(404).send()
+    }
+    else{
+      todos[index].title = req.body.title; 
+      todos[index].description = req.body.description;
+      res.status(200).json(todos[index]);
+    }
+});
+
+app.delete('/todos/:id',(req,res) => {
+  const id = parseInt(req.params.id);
+  let index = todos.findIndex(t => t.id === id);
+  if(index === -1 )
+  {
+    res.status(404).send();
+  }
+  else
+  {
+    todos.splice(index,1);
+    res.status(200).send();
+  }
+})
+
+
+app.use((res,req,next)=>{
+  res.status(404);
+});
+
+module.exports = app;
